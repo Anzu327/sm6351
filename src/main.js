@@ -197,7 +197,7 @@ document.querySelector("#app").innerHTML = `
             </div>
             <div class="editor-actions">
               <button class="button primary" id="run-button" type="button">Run code <span>⌘/Ctrl ↵</span></button>
-              <button class="return-button" id="return-to-source" type="button" hidden><svg class="return-arrow" viewBox="0 0 36 48" aria-hidden="true" focusable="false"><g><path d="M18 5V40M5 27L18 40L31 27" /></g></svg>← Back to where I was <span lang="zh-Hant">返回剛才的位置</span></button>
+              <button class="return-button" id="return-to-source" type="button" hidden><svg class="return-arrow" viewBox="0 0 44 52" aria-hidden="true" focusable="false"><g><path d="M15 3H29Q31 3 31 5V26Q31 28 33 28H39Q42 28 40 31L24 48Q22 50 20 48L4 31Q2 28 5 28H11Q13 28 13 26V5Q13 3 15 3Z" /></g></svg>← Back to where I was <span lang="zh-Hant">返回剛才的位置</span></button>
               <button class="button ghost" id="reset-button" type="button">Reset</button>
               <button class="button ghost" id="download-button" type="button">Export .js</button>
               <button class="button download-project" id="download-project-button" type="button">Download project ZIP</button>

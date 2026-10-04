@@ -44,6 +44,27 @@ assert.equal(await layoutLesson.locator(".snippet-token.is-highlighted").count()
 const returnButton = page.locator("#return-to-source");
 assert.equal(await returnButton.isVisible(), false, "return button starts hidden");
 assert.equal(await returnButton.evaluate((button) => button.parentElement.classList.contains("editor-actions")), true, "return button sits below the code editor");
+const returnArrow = returnButton.locator(".return-arrow");
+await page.locator('[data-focus="hierarchy"]').click();
+await page.waitForFunction(() => document.activeElement?.classList.contains("cm-content"));
+await page.waitForTimeout(1700);
+assert.equal(await returnArrow.evaluate((arrow) => getComputedStyle(arrow).opacity), "0", "arrow stays hidden for the first two seconds after code positioning");
+await page.waitForFunction(() => getComputedStyle(document.querySelector(".return-arrow")).opacity === "0.7");
+assert.equal(await returnArrow.evaluate((arrow) => getComputedStyle(arrow.querySelector("g")).animationName), "return-arrow-float");
+assert.equal(await returnArrow.evaluate((arrow) => getComputedStyle(arrow).pointerEvents), "none");
+const arrowAlignment = await returnArrow.evaluate((arrow) => {
+  const a = arrow.getBoundingClientRect();
+  const b = arrow.parentElement.getBoundingClientRect();
+  return Math.abs(a.left + a.width / 2 - b.left - b.width / 2) < 2 && a.bottom < b.top && a.top >= 0;
+});
+assert.equal(arrowAlignment, true, "arrow is centered above the button within the viewport");
+await page.locator('[data-task-focus="spacing"]').click();
+await page.waitForFunction(() => document.activeElement?.classList.contains("cm-content"));
+await page.waitForTimeout(1700);
+assert.equal(await returnArrow.evaluate((arrow) => getComputedStyle(arrow).opacity), "0", "a new code jump restarts the arrow delay");
+await returnButton.click();
+await page.waitForTimeout(700);
+assert.equal(await returnButton.evaluate((button) => button.classList.contains("show-return-arrow")), false, "returning early cancels the delayed arrow");
 for (const selector of ['[data-focus="appearance"]', '[data-task-focus="color"]', '[data-task-focus="spacing"]']) {
   const trigger = page.locator(selector);
   await trigger.scrollIntoViewIfNeeded();
@@ -477,6 +498,9 @@ const mobileReturn = mobile.locator("#return-to-source");
 assert.equal(await mobileReturn.isVisible(), true);
 const mobileReturnBox = await mobileReturn.boundingBox();
 assert.ok(mobileReturnBox.y >= 0 && mobileReturnBox.y + mobileReturnBox.height <= 844, "mobile return button is visible after the jump");
+await mobile.waitForFunction(() => getComputedStyle(document.querySelector(".return-arrow")).opacity === "0.7");
+const mobileArrowBox = await mobileReturn.locator(".return-arrow").boundingBox();
+assert.ok(mobileArrowBox.y >= 0 && mobileArrowBox.x >= 0 && mobileArrowBox.x + mobileArrowBox.width <= 390, "mobile arrow remains within the viewport");
 await mobileReturn.click();
 assert.ok(Math.abs((await mobile.evaluate(() => scrollY)) - mobileOriginY) <= 2);
 assert.equal(await mobileTrigger.evaluate((button) => document.activeElement === button), true);
@@ -497,6 +521,8 @@ assert.ok((await reduced.locator(".cm-scroller").evaluate((element) => element.s
 const reducedReturn = reduced.locator("#return-to-source");
 assert.equal(await reducedReturn.isVisible(), true);
 assert.equal(await reducedReturn.evaluate((button) => getComputedStyle(button).animationName), "none", "reduced motion keeps the button static");
+await reduced.waitForFunction(() => getComputedStyle(document.querySelector(".return-arrow")).opacity === "0.7");
+assert.equal(await reducedReturn.locator(".return-arrow g").evaluate((group) => getComputedStyle(group).animationName), "none", "reduced motion keeps the delayed arrow static");
 await reducedReturn.click();
 assert.equal(await reduced.locator('[data-focus="hierarchy"]').evaluate((button) => document.activeElement === button), true, "reduced motion returns keyboard focus");
 await reduced.close();

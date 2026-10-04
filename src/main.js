@@ -197,7 +197,7 @@ document.querySelector("#app").innerHTML = `
             </div>
             <div class="editor-actions">
               <button class="button primary" id="run-button" type="button">Run code <span>⌘/Ctrl ↵</span></button>
-              <button class="return-button" id="return-to-source" type="button" hidden>← Back to where I was <span lang="zh-Hant">返回剛才的位置</span></button>
+              <button class="return-button" id="return-to-source" type="button" hidden><svg class="return-arrow" viewBox="0 0 36 48" aria-hidden="true" focusable="false"><g><path d="M18 5V40M5 27L18 40L31 27" /></g></svg>← Back to where I was <span lang="zh-Hant">返回剛才的位置</span></button>
               <button class="button ghost" id="reset-button" type="button">Reset</button>
               <button class="button ghost" id="download-button" type="button">Export .js</button>
               <button class="button download-project" id="download-project-button" type="button">Download project ZIP</button>
@@ -650,10 +650,17 @@ function setCode(next) {
 }
 const returnButton = document.querySelector("#return-to-source");
 let returnTarget = null;
+let returnArrowTimer = 0;
+function clearReturnArrow() {
+  clearTimeout(returnArrowTimer);
+  returnArrowTimer = 0;
+  returnButton.classList.remove("show-return-arrow");
+}
 returnButton.addEventListener("click", () => {
   if (!returnTarget) return;
   const { button, scrollY } = returnTarget;
   returnTarget = null;
+  clearReturnArrow();
   returnButton.hidden = true;
   button.focus({ preventScroll: true });
   window.scrollTo({ top: scrollY, behavior: "instant" });
@@ -668,6 +675,7 @@ function focusText(token, endToken = token, originButton = null) {
     return false;
   }
   if (originButton) {
+    clearReturnArrow();
     returnTarget = { button: originButton, scrollY: originScrollY };
     returnButton.hidden = false;
   }
@@ -690,6 +698,7 @@ function focusText(token, endToken = token, originButton = null) {
   const clearHighlight = () => editor.dispatch({ effects: setLocateHighlight.of(Decoration.none) });
   locateTimer = setTimeout(clearHighlight, 4200);
   const generation = locateGeneration;
+  const arrowTarget = originButton ? returnTarget : null;
   const targetScrollTop = () => {
     const block = editor.lineBlockAt(start);
     const center = block.top + editor.documentPadding.top - (scroller.clientHeight - block.height) / 2;
@@ -705,6 +714,14 @@ function focusText(token, endToken = token, originButton = null) {
       scroller.scrollTop = targetScrollTop();
       editor.dispatch({ selection: { anchor: start }, effects: EditorView.scrollIntoView(start, { y: "center" }) });
       editor.contentDOM.focus({ preventScroll: true });
+      if (arrowTarget && returnTarget === arrowTarget && !returnButton.hidden) {
+        returnArrowTimer = setTimeout(() => {
+          returnArrowTimer = 0;
+          if (generation === locateGeneration && returnTarget === arrowTarget && !returnButton.hidden) {
+            returnButton.classList.add("show-return-arrow");
+          }
+        }, 2000);
+      }
       clearTimeout(locateTimer);
       locateTimer = setTimeout(clearHighlight, 3600);
     };

@@ -31,7 +31,7 @@ h2{font-family:Georgia,serif;font-size:clamp(30px,3.5vw,45px);line-height:1.15;l
 .section-heading p{font-size:17px;line-height:1.6;color:#53657f;margin:0}
 .overview-grid{margin-bottom:36px}
 .intro-copy{min-width:0}
-.intro-copy>p:first-child{font-size:18px;line-height:1.65;max-width:840px;margin-bottom:24px}
+.intro-copy>p:not(.source-note){font-size:18px;line-height:1.65;max-width:840px;margin-bottom:20px}
 .data-diagram{display:flex;align-items:center;gap:0;max-width:700px;margin-bottom:24px}
 .data-node{display:flex;flex-direction:column;justify-content:center;min-height:66px;padding:10px 18px;border:1px solid #cbd8e8;background:white;border-radius:7px;min-width:130px;font-size:17px;font-weight:700}
 .data-node small{font-size:13px;color:#667c98;font-weight:500;margin-top:3px}

@@ -137,7 +137,9 @@ document.querySelector("#app").innerHTML = `
       <div class="section-heading"><span class="section-index">01 / THE RESULT</span><h2>One dataset. Three levels. A tree you can open.</h2></div>
       <div class="overview-grid">
         <div class="intro-copy">
-          <p>The source data is already nested: <strong>World → Regional group → Country or region</strong>. Each listed entry has a GDP share; each group has a color reserved for your second modification.</p>
+          <p>This <strong>collapsible node-link tree</strong> turns a nested GDP dataset into a hierarchy you can explore: <strong>World → Regional group → Country or region</strong>. Circles represent nodes, and connecting lines show which entries belong to each group.</p>
+          <p>Each entry’s percentage is its share of <strong>world GDP</strong>. D3 adds these values to calculate group and World totals; the number in parentheses tells you how many immediate children a node contains. Color distinguishes regional groups, while circle size stays the same—it does not encode GDP.</p>
+          <p>Start with the seven groups, then <strong>click a group to expand or collapse its entries</strong>. Drag the preview to move around the tree, or use Reset view to return to the starting view. In the live editor below, Task 1 gives all groups one shared color; Task 2 increases the vertical spacing. Press <strong>Run code</strong> to see each change.</p>
           <div class="data-diagram" aria-label="Example data hierarchy">
             <span class="data-node root">World <small>root</small></span>
             <span class="data-connector"></span>
@@ -145,7 +147,7 @@ document.querySelector("#app").innerHTML = `
             <span class="data-connector"></span>
             <span class="data-node country">China <small>country or region · 14.84%</small></span>
           </div>
-          <p class="source-note">Historical GDP share snapshot, January 2017, from the <a href="https://gist.github.com/Kcnarf/fa95aa7b076f537c00aed614c29bb568" target="_blank" rel="noreferrer">source Gist</a>. “Rest of the World” is an aggregate.</p>
+          <p class="source-note">Historical GDP share snapshot, January 2017, from the <a href="https://gist.github.com/Kcnarf/fa95aa7b076f537c00aed614c29bb568" target="_blank" rel="noreferrer">source Gist</a>. These are historical figures. “Rest of the World” is an aggregate, and the listed shares total 99.97%.</p>
         </div>
       </div>
       <div class="workspace" id="workspace">

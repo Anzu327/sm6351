@@ -417,9 +417,13 @@ const editor = new EditorView({
       "&": { backgroundColor: "#131e2c", color: "#e8effa", height: "100%" },
       ".cm-content": { caretColor: "#a5c6ff", fontFamily: "SFMono-Regular, Consolas, monospace", fontSize: "15px", lineHeight: "1.65" },
       ".cm-gutters": { backgroundColor: "#172436", color: "#71839b", border: "none" },
-      ".cm-activeLine, .cm-activeLineGutter": { backgroundColor: "#203249" },
+      // The selection layer sits behind the text, so line backgrounds must stay translucent.
+      ".cm-activeLine": { backgroundColor: "rgba(91, 133, 190, 0.16)" },
+      ".cm-activeLineGutter": { backgroundColor: "#203249" },
       "&.cm-focused .cm-cursor": { borderLeftColor: "#a5c6ff" },
-      "&.cm-focused .cm-selectionBackground, ::selection": { backgroundColor: "#31558b" },
+      ".cm-selectionBackground": { backgroundColor: "#304563" },
+      "&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground": { backgroundColor: "#31558b" },
+      ".cm-content ::selection": { backgroundColor: "#31558b" },
     }, { dark: true }),
     EditorView.updateListener.of((update) => {
       if (!update.docChanged) return;
